@@ -1,11 +1,11 @@
-# ESPHome AUX air conditioner custom component (aux_ac) #
-For communication about this project [please join this telegram chat](https://t.me/aux_ac). 
+# ESPHome AUX空调定制组件（aux_ac） #
+关于本项目的沟通 [请加入这个telegram chat](https://t.me/aux_ac). 
  
-For issues or feature requests, please go to [the issue section](https://github.com/GrKoR/esphome_aux_ac_component/issues). It will be perfect if you attach log to your issue. Log you can collect with [this python script](https://github.com/GrKoR/ac_python_logger). It helps you to save all data frames from the UART bus to a csv-file. This log combined with the detailed situation description will significantly speed up bug correction.
+有关问题或功能请求，请转到 [the issue section](https://github.com/GrKoR/esphome_aux_ac_component/issues). It will be perfect if you attach log to your issue. Log you can collect with [this python script](https://github.com/GrKoR/ac_python_logger). It helps you to save all data frames from the UART bus to a csv-file. This log combined with the detailed situation description will significantly speed up bug correction.
  
  
-## DISCLAIMER ##
-1. All data of this project (software, firmware, schemes, 3d-models etc.) are provided **'AS IS'**. Everything you do with your devices, you are doing at your own risk. If you don't strongly understand what you are doing, just buy wifi-module from your air conditioner manufacturer.
+## 免责声明 ##
+1. 本项目的所有数据（软件、固件、方案、三维模型等） 均为 **'原样提供'**. 使用它对你的设备所做的一切,都将由你承担一切风险.如果你不明白你在做怎么, 请直接购买空调制造商的WIFI模块.
 2. I am not a programmer. So source code is certainly not optimal and badly decorated (but there are a lot of comments in it; sorry, a significant part of it is in Russian). Also, code may be written unsafe. I tried to test all parts of the code, but I'm sure I missed a lot of things. So treat it with suspicion, expect a trick from it, and if you discover something wrong write an issue here.
 3. Russian and English readme files are substantially identical in meaning. But in case of differences, the [Russian](https://github.com/GrKoR/esphome_aux_ac_component#readme) version is more significant.
  
@@ -45,23 +45,23 @@ The best way to report about your test results is writing a message in the [tele
 ## How to use it ##
 For correct component operation, you need hardware and firmware. The hardware description is located [in a separate file](docs/HARDWARE-EN.md).
 
-### Firmware: Integration aux_ac to your configuration ###
-You need [ESPHome](https://esphome.io) v.1.18.0 or above. `External_components` have appeared in this version. But it is better to use ESPHome v.1.20.4 or above, cause there were a lot of `external_components` errors corrected before this version.
+### 固件: 将aux_ac集成到您的配置 ###
+你需要 [ESPHome](https://esphome.io) v.1.18.0 或更高版本, 此版本中有`External_components` . 但最好使用 ESPHome v.1.20.4 或更高版本, 因为在此版本之前有很多`external_components` 的错误已经修正.
 
-## Installing ##
-1. Declare external component. Read [the manual](https://esphome.io/components/external_components.html?highlight=external) for details.
+## 安装 ##
+1. external component声明. 请查看这个 [手册](https://esphome.io/components/external_components.html?highlight=external) 获取更多信息.
 ```yaml
 external_components:
   - source:
       type: git
       url: https://github.com/GrKoR/esphome_aux_ac_component
 ```
-2. Configure UART to communicate with air conditioner:
+2. 配置UART口与空调通讯:
 ```yaml
 uart:
   id: ac_uart_bus
-  # ATTENTION! For TX and RX use GPIO4 (D2) and GPIO5 (D1) for NodeMCU-like boards!
-  # See docs for details: https://github.com/GrKoR/esphome_aux_ac_component/blob/master/docs/HARDWARE-EN.md
+  # 注意! 有些NodeMCU开发板使用GPIO4 (D2) 和 GPIO5 (D1) 作为 TX 和 RX 的通讯口 !
+  # 详细信息请查看文档: https://github.com/GrKoR/esphome_aux_ac_component/blob/master/docs/HARDWARE-EN.md
   tx_pin: GPIO1
   rx_pin: GPIO3
   baud_rate: 4800
@@ -69,27 +69,27 @@ uart:
   parity: EVEN
   stop_bits: 1
 ```
-3. **ATTENTION!** You need to disable the ESPHome logger so that it does not send its data to the air conditioner. Disabling the logger from the UART bus will not affect the logger output to the console or web server in any way.
+3. **注意!** 你需要禁用ESPHome的logger,防止它把数据发送给空调. 从UART接口禁用logger不会影响到控制台（console）或者web服务器的logger输出.
 ```yaml
 logger:
     baud_rate: 0
 ```
-If for some reason you need the logger output to the UART, you can switch it to another UART. ESP8266 has two hardware UARTs: UART0 and UART1. Only UART0 suits for `aux_ac` cause only it has both TX and RX. UART1 has TX only, and it can be used by logger for output:
+如果出于某些原因你需要将logger输出至 】UART接口, 你可以切换到另一个UART接口. ESP8266支持两个硬件UART接口: UART0 和 UART1. 仅UART0支持`aux_ac`，因为它同时具有TX和RX. UART1 仅支持TX, 可以用于logger的输出:
 ```yaml
 logger:
     level: DEBUG
     hardware_uart: UART1
 ```
 
-## AUX_AC Configuration ##
-Minimal configuration:
+## AUX_AC 配置 ##
+最小配置:
 ```yaml
 climate:
   - platform: aux_ac
     name: "AC Name"
 ```
 
-Full configuration:
+完整配置:
 ```yaml
 climate:
   - platform: aux_ac
@@ -174,43 +174,43 @@ climate:
       - BOTH
 ```
 
-## Configuration variables: ##
+## 配置变量: ##
 
-- **name** (**Required**, string): The name of the climate device. At least one of `id` or `name` is required!
+- **name** (**必须**, string): 空调设备的名称.  `id` 或 `name` 至少要填一个!
 
-- **id** (*Optional*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): Manually specify the ID used for code generation. At least one of `id` or `name` is required!
+- **id** (*可选*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): 手动指定用于代码的ID.  `id`或`name`至少要填一个!
 
-- **uart_id** (*Optional*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): Manually specify the ID of the [UART Bus](https://esphome.io/components/uart.html) if you want to use multiple UART buses.
+- **uart_id** (*可选*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): 手动指定[UART Bus](https://esphome.io/components/uart.html) 的ID，如果你打算使用多个UART总线.
 
-- **period** (*Optional*, [time](https://esphome.io/guides/configuration-types.html#config-time), default ``7s``): Period between status requests to the AC. `Aux_ac` will receive the new air conditioner status only after a regular request, even if you change the settings of AC using IR-remote.
+- **period** (*可选*, [time](https://esphome.io/guides/configuration-types.html#config-time), 默认 ``7s``): 向AC发送状态请求的间隔时间. 即便你使用红外遥控器更改空调的状态，`Aux_ac` 也仅在定期发出请求后才会收到空调状态.
 
-- **show_action** (*Optional*, boolean, default ``true``): Whether to show current action of the device (experimental). For example, in the HEAT-COOL mode, AC hardware may be in one of the following actions:
-  - HEATING: AC is heating the air in the room;
-  - IDLE: AC is working in the FAN mode, cause the target temperature is reached;
-  - COOLING: AC is cooling the air.
-  The same thing will be in HEAT or COOL modes, with the only difference of the list of actions (IDLE + HEATING or IDLE + COOLING).
+- **show_action** (*可选*, boolean, default ``true``): 是否显示设备当前的动作 (实验). 例如, 在（HEAT_COOL）模式下, 空调硬件可能属于以下动作中:
+  - HEATING: 空调正在加热房间;
+  - IDLE: 因已达到目标温度，空调正工作在风扇（FAN）模式;
+  - COOLING: 空调正在制冷.
+  在 HEAT（加热）或 COOL（制冷）模式下也是如此, 唯一不同的是动作列表里显示 (IDLE + HEATING 或 IDLE + COOLING).
 
-  - **display_inverted** (*Optional*, boolean, default ``false``): It configures display driver logic level. As it turned out in the issue [#31](https://github.com/GrKoR/esphome_aux_ac_component/issues/31), different models of conditioners manage display different way. Rovex ACs powers off display by bit `1` in command packet and power it on by bit `0`. Many other conditioners do this vice versa.
+  - **display_inverted** (*可选*, boolean, default ``false``): It configures display driver logic level. As it turned out in the issue [#31](https://github.com/GrKoR/esphome_aux_ac_component/issues/31), different models of conditioners manage display different way. Rovex ACs powers off display by bit `1` in command packet and power it on by bit `0`. Many other conditioners do this vice versa.
 
-- **timeout** (*Optional*, unsigned integer, default ``150``): Packet timeout for `aux_ac` data receiver.  
-  In the most common use of `aux_ac`, it isn't necessary to change this value. This keyword is optional, so you may omit it.  
-  The only situation when you can play with timeout is heavily loaded ESP. When you are using your ESP for many hard tasks, it is possible that `aux_ac` does not have enough time to receive AC responses. In this case, you can slightly raise the timeout value. But the best solution would be to remove some of the tasks from the ESP.  
-  The timeout is limited to a range from `150` to `600` milliseconds. Other values are possible only with source code modification. But I don't recommend that.
+- **timeout** (*可选*, unsigned integer, default ``150``):  `aux_ac`接收数据包的超时时间.  
+  通常无需修改此值，默认即可.  
+  唯一需要修改此值的情况是ESP任务繁重. 当你使用ESP执行过多超负荷的任务时, `aux_ac`可能没有足够的时间去接收 AC 发送的数据包. 在这种情况下可以稍微提高超时时间，但最好的方案是从ESP中删除一些任务.  
+  超时限制在 `150` 至 `600` 毫秒内. 只有修改源代码才能设定更大的范围，但我不建议那样做.
 
-- **indoor_temperature** (*Optional*): Parameters of the room air temperature sensor.
-  - **name** (**Required**, string): The name for the temperature sensor.
-  - **id** (*Optional*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): Set the ID of this sensor for use in lambdas.
-  - **internal** (*Optional*, boolean): Mark this component as internal. Internal components will not be exposed to the frontend (like Home Assistant). As opposed to default [Sensor](https://esphome.io/components/sensor/index.html#base-sensor-configuration) behaviour, this variable is **always true** except in cases where the user has set it directly.
+- **indoor_temperature** (*可选*): 内部温度传感器参数.
+  - **name** (**Required**, string): 这个温度传感器的名称.
+  - **id** (*Optional*, [ID](https://esphome.io/guides/configuration-types.html#config-id)): 设置 ID 用于这个传感器的lambdas表达式.
+  - **internal** (*Optional*, boolean): 将此组件标记为内部组件. Internal components will not be exposed to the frontend (like Home Assistant). As opposed to default [Sensor](https://esphome.io/components/sensor/index.html#base-sensor-configuration) behaviour, this variable is **always true** except in cases where the user has set it directly.
   - All other options from [Sensor](https://esphome.io/components/sensor/index.html#base-sensor-configuration).
 
-- **outdoor_temperature** (*Optional*): Parameters of the outdoor temperature sensor. They are the same as the **indoor_temperature** (see description above).  
-  > **Attention!** When the air conditioner is turned off, the outdoor temperature is updated rarely (every 6-7 hours). This isn't a bug of the component, but a feature of the air conditioner hardware. The only way to get changes more often is to create a template sensor, the temperature of which can be changed manually. When the air conditioner is working, the value of this sensor can be copied from the **outdoor_temperature**. When the air conditioner is turned off, the temperature value should be recalculated according to the dynamics of the **outbound_temperature** sensor (it changes frequently and shows values close to the air temperature when the air conditioner is turned off). You can't copy the value of **outbound_temperature** without changes to the template sensor in AC off mode, because these temperatures are not identical.
+- **outdoor_temperature** (*可选*): 外部温度传感器参数. They are the same as the **indoor_temperature** (see description above).  
+  > **注意!** 当空调关闭时, 外部温度传感器很少更新 (每 6-7 小时更新一次). 这不是组件的bug, 而是空调设备的一个机制. 要更频繁的更新，唯一的办法就是创建一个模板传感器（template sensor）, 对这个温度进行更新. 当空调工作时, 使用 **outdoor_temperature**更新模板传感器（template sensor）的值. 在空调关闭时, 应根据 **outbound_temperature** 传感器的动态特征重新计算此温度的值 (当空调关闭时它频繁变化，并接近空气温度值). 你不应直接复制 **outbound_temperature** 的值去更新模板传感器，它们并不完全一样（template sensor），（You can't copy the value of **outbound_temperature** without changes to the template sensor in AC off mode, because these temperatures are not identical.）
 
-- **inbound_temperature** (*Optional*): Parameters of the coolant inbound temperature sensor. They are the same as the **indoor_temperature** (see description above).
+- **inbound_temperature** (*Optional*): 冷却剂入口的温度传感器参数. 它们与 **indoor_temperature** 相同(请参见上面的描述).
 
-- **outbound_temperature** (*Optional*):  Parameters of the coolant outbound temperature sensor. They are the same as the **indoor_temperature** (see description above).
+- **outbound_temperature** (*Optional*):  冷却剂出口的温度传感器参数. 它们与 **indoor_temperature** 相同(请参见上面的描述).
 
-- **compressor_temperature** (*Optional*):  Parameters of the compressor temperature sensor. They are the same as the **indoor_temperature** (see description above).
+- **compressor_temperature** (*Optional*):  压缩机温度传感器参数. 它们与 **indoor_temperature** 相同(请参见上面的描述).
 
 - **display_state** (*Optional*): The information for the HVAC display state sensor (is display ON or OFF)
   - **name** (**Required**, string): The name for the display state sensor.
